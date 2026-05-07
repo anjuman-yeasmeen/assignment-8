@@ -1,0 +1,70 @@
+{
+    "models": [
+  {
+    "id": 1,
+    "name": "UV Protection Retro Sunglasses",
+    "brand": "SunShade",
+    "price": 29.99,
+    "rating": 4.8,
+    "stock": 12,
+    "description": "Premium UV400 protection with a vintage aesthetic. Lightweight and perfect for beach days.",
+    "image": "https://stjamesquarter.com/wp-content/uploads/2023/10/sunglass-690x600.jpg",
+    "category": "Accessories"
+  },
+  {
+    "id": 2,
+    "name": "Tropical Breeze Linen Shirt",
+    "brand": "IslandStyle",
+    "price": 45.00,
+    "rating": 4.5,
+    "stock": 8,
+    "description": "100% breathable linen fabric keeping you cool in the scorching summer heat.",
+    "image": "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?q=80&w=500&auto=format&fit=crop",
+    "category": "Clothing"
+  },
+  {
+    "id": 3,
+    "name": "Hydration Pro Insulated Bottle",
+    "brand": "AquaCool",
+    "price": 19.50,
+    "rating": 4.9,
+    "stock": 25,
+    "description": "Vacuum-insulated stainless steel bottle that keeps your water ice-cold for 24 hours.",
+    "image": "https://rokbucket.rokomari.io/ProductNew20190903/260X372/Transparent_Glass_Bottle_1Pcs-Non_Brand-353d9-321276.png",
+    "category": "Outdoor"
+  },
+  {
+    "id": 4,
+    "name": "Coconut Glow Sunscreen SPF 50",
+    "brand": "SkinGuard",
+    "price": 15.99,
+    "rating": 4.7,
+    "stock": 50,
+    "description": "Non-greasy, water-resistant formula with a refreshing coconut scent.",
+    "image": "https://images.unsplash.com/photo-1556229010-6c3f2c9ca5f8?q=80&w=500&auto=format&fit=crop",
+    "category": "Skincare"
+  },
+  {
+    "id": 5,
+    "name": "Floral Summer Maxi Dress",
+    "brand": "Bloom",
+    "price": 55.00,
+    "rating": 4.6,
+    "stock": 5,
+    "description": "Elegant floral patterns on soft, airy fabric. Ideal for summer parties and vacations.",
+    "image": "https://images.unsplash.com/photo-1572804013307-a9a11198427e?q=80&w=500&auto=format&fit=crop",
+    "category": "Clothing"
+  },
+  {
+    "id": 6,
+    "name": "Classic Straw Panama Hat",
+    "brand": "Breezy",
+    "price": 22.00,
+    "rating": 4.4,
+    "stock": 10,
+    "description": "Hand-woven straw hat offering excellent shade and a timeless summer look.",
+    "image": "https://images.unsplash.com/photo-1533445022776-d4263b3c3bc4?q=80&w=500&auto=format&fit=crop",
+    "category": "Accessories"
+  }
+]
+}
