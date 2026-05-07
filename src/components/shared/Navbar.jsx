@@ -1,10 +1,22 @@
 "use client";
 import Link from "next/link";
 import React from "react";
+// ১. BetterAuth থেকে ক্লায়েন্ট ফাংশন ইমপোর্ট
+import { createAuthClient } from "better-auth/react"; 
+
+const authClient = createAuthClient();
 
 const Navbar = () => {
-  
-  const user = null; 
+  // ২. সেশন ডাটা গেট করা
+  const { data: session } = authClient.useSession();
+  const user = session?.user; // সেশন থাকলে ইউজার ডাটা এখানে আসবে
+
+  // ৩. লগআউট ফাংশন
+  const handleLogout = async () => {
+    await authClient.signOut();
+    window.location.href = "/login";
+  };
+
   return (
     <div className="navbar bg-base-100 shadow-sm px-4 md:px-10 sticky top-0 z-50">
       {/* 1. Logo Section */}
@@ -22,9 +34,7 @@ const Navbar = () => {
           </ul>
         </div>
         
-        {/* Iconic Logo */}
         <Link href="/" className="flex items-center gap-2">
-          
           <span className="text-xl font-bold tracking-tighter text-orange-600 hidden sm:block">HEATWAVE</span>
         </Link>
       </div>
@@ -44,13 +54,14 @@ const Navbar = () => {
           <div className="dropdown dropdown-end">
             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar border-2 border-orange-400">
               <div className="w-10 rounded-full">
-                <img alt="User Avatar" src="https://i.pravatar.cc/150?u=fake@pravatar.com" />
+                {/* সেশন থেকে ইউজারের ছবি দেখাবে, না থাকলে ডিফল্ট */}
+                <img alt="User Avatar" src={user.image || "https://i.pravatar.cc/150"} />
               </div>
             </div>
             <ul tabIndex={0} className="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
-              <li className="px-4 py-2 font-bold text-orange-500">User Name</li>
+              <li className="px-4 py-2 font-bold text-orange-500">{user.name}</li>
               <li><Link href="/profile">Dashboard</Link></li>
-              <li><button className="text-red-500 font-bold">Logout</button></li>
+              <li><button onClick={handleLogout} className="text-red-500 font-bold">Logout</button></li>
             </ul>
           </div>
         ) : (
