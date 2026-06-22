@@ -3,7 +3,7 @@ import { betterAuth } from "better-auth";
 import { nextCookies } from "better-auth/next-js";
 
 export const auth = betterAuth({
-    // এখানে আপনার ডাটাবেস কনফিগারেশন থাকবে (আপাতত বেসিক রাখছি)
+    
     emailAndPassword: {  
         enabled: true
     },

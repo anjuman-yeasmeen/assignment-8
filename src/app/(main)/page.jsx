@@ -3,7 +3,7 @@ import ProductCard from "@/components/shared/ProductCard";
 export default async function Home() {
    
    
-    const res = await fetch("http://localhost:8000/models", {
+    const res = await fetch("https://json.shahriyar.dev/anjuman-yeasmeen/product", {
       cache: "no-store",
     });
 
