@@ -1,17 +1,17 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const ProductDetailsPage = async ({ params }) => {
-    // ১. Next.js-এর নিয়ম অনুযায়ী params-কে await করে নিতে হবে
+    
     const { id } = await params;
 
     try {
-        // ২. id-কে সংখ্যায় (Number) রূপান্তর করে JSON Server থেকে ডাটা ফেচ করা হচ্ছে
+       
         const res = await fetch(`https://json.shahriyar.dev/anjuman-yeasmeen/models/${Number(id)}`, {
             cache: "no-store",
         });
 
-        // যদি ডাটা খুঁজে না পাওয়া যায়
         if (!res.ok) {
             return (
                 <div className="text-center py-20 min-h-screen flex flex-col justify-center items-center">
@@ -25,7 +25,7 @@ const ProductDetailsPage = async ({ params }) => {
 
         return (
             <div className="container mx-auto px-4 py-12 md:py-20 min-h-screen">
-                {/* Breadcrumb - নেভিগেশনের সুবিধার জন্য */}
+               
                 <div className="text-sm breadcrumbs mb-6 text-gray-500">
                     <ul>
                         <li><Link href="/">Home</Link></li>
@@ -38,12 +38,14 @@ const ProductDetailsPage = async ({ params }) => {
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 bg-base-100 p-6 md:p-10 rounded-3xl shadow-xl border border-orange-50">
                     
                     {/* Left Side: Product Image */}
-                    <div className="flex justify-center items-center bg-gray-50 rounded-2xl p-4 overflow-hidden group">
-                        <img 
+                    <div className="flex justify-center items-center bg-gray-50 rounded-2xl p-4 overflow-hidden group min-h-[450px] relative">
+                        <Image 
                             src={product.image} 
                             alt={product.name} 
-                            className="w-full max-h-[450px] object-contain rounded-xl group-hover:scale-105 transition-transform duration-300"
-                            
+                            fill
+                            sizes="(max-width: 1024px) 100vw, 50vw"
+                            className="object-contain p-4 rounded-xl group-hover:scale-105 transition-transform duration-300"
+                            priority
                         />
                     </div>
 
@@ -114,8 +116,8 @@ const ProductDetailsPage = async ({ params }) => {
         console.error("Error fetching product details:", error);
         return (
             <div className="text-center py-20 min-h-screen flex flex-col justify-center items-center">
-                <h2 className="text-red-500 text-2xl font-bold">সার্ভার এরর! ডাটা লোড করা যায়নি।</h2>
-                <p className="text-gray-500 text-sm mt-2">অনুগ্রহ করে নিশ্চিত করুন আপনার JSON Server (Port 8000) সচল আছে।</p>
+                <h2 className="text-red-500 text-2xl font-bold">Server Error! Failed to load data.</h2>
+                <p className="text-gray-500 text-sm mt-2">Please ensure your JSON Server is running properly.</p>
                 <Link href="/" className="btn bg-orange-500 text-white mt-6 btn-sm border-none">Try Refresh</Link>
             </div>
         );

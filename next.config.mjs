@@ -1,6 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'json.shahriyar.dev',
+      },
+      {
+        protocol: 'https',
+        hostname: 'stjamesquarter.com',
+      },
+    ],
+  },
 };
 
 export default nextConfig;
