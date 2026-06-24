@@ -10,6 +10,7 @@
     "server": "json-server --watch product.json --port 8000"
   },
   "dependencies": {
+    "@better-auth/mongo-adapter": "^1.6.20",
     "better-auth": "^1.6.9",
     "json-server": "^1.0.0-beta.15",
     "next": "16.2.4",

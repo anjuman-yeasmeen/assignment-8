@@ -1,8 +1,6 @@
 import ProductCard from "@/components/shared/ProductCard";
 
 export default async function Home() {
-   
-   
     const res = await fetch("https://json.shahriyar.dev/anjuman-yeasmeen/product", {
       cache: "no-store",
     });
@@ -11,9 +9,7 @@ export default async function Home() {
 
     const data = await res.json();
 
-   
     const products = Array.isArray(data) ? data : data.models || [];
-   
     const popularProducts = products.slice(0, 3);
 
     return (
@@ -51,40 +47,39 @@ export default async function Home() {
             )}
           </div>
         </section>
-        {/* Summer Care Tips Section */}
-<section className="bg-orange-50 py-16">
-  <div className="container mx-auto px-4">
-    <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">☀️ Summer Care Tips</h2>
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-      <div className="card bg-white p-6 shadow-md border-b-4 border-orange-400">
-        <h3 className="font-bold text-xl mb-2 text-orange-600">Stay Hydrated 💧</h3>
-        <p className="text-gray-600">Drink at least 8-10 glasses of water daily to keep your body cool.</p>
-      </div>
-      <div className="card bg-white p-6 shadow-md border-b-4 border-orange-400">
-        <h3 className="font-bold text-xl mb-2 text-orange-600">Skin Protection 🧴</h3>
-        <p className="text-gray-600">Always apply SPF 50+ sunscreen before heading out in the sun.</p>
-      </div>
-      <div className="card bg-white p-6 shadow-md border-b-4 border-orange-400">
-        <h3 className="font-bold text-xl mb-2 text-orange-600">Wear Light Clothes 👕</h3>
-        <p className="text-gray-600">Choose breathable fabrics like linen and cotton for maximum comfort.</p>
-      </div>
-    </div>
-  </div>
-</section>
 
-{/* Top Brands Section */}
-<section className="container mx-auto px-4 py-16">
-  <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">🏆 Top Brands</h2>
-  <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-    {["SunShade", "IslandStyle", "AquaCool", "SkinGuard"].map((brand) => (
-      <div key={brand} className="flex items-center justify-center p-8 bg-gray-100 rounded-lg grayscale hover:grayscale-0 transition-all cursor-pointer border border-gray-200">
-        <span className="text-xl font-black text-gray-400 uppercase tracking-widest">{brand}</span>
-      </div>
-    ))}
-  </div>
-</section>
+        {/* Summer Care Tips Section */}
+        <section className="bg-orange-50 py-16">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">☀️ Summer Care Tips</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="card bg-white p-6 shadow-md border-b-4 border-orange-400">
+                <h3 className="font-bold text-xl mb-2 text-orange-600">Stay Hydrated 💧</h3>
+                <p className="text-gray-600">Drink at least 8-10 glasses of water daily to keep your body cool.</p>
+              </div>
+              <div className="card bg-white p-6 shadow-md border-b-4 border-orange-400">
+                <h3 className="font-bold text-xl mb-2 text-orange-600">Skin Protection 🧴</h3>
+                <p className="text-gray-600">Always apply SPF 50+ sunscreen before heading out in the sun.</p>
+              </div>
+              <div className="card bg-white p-6 shadow-md border-b-4 border-orange-400">
+                <h3 className="font-bold text-xl mb-2 text-orange-600">Wear Light Clothes 👕</h3>
+                <p className="text-gray-600">Choose breathable fabrics like linen and cotton for maximum comfort.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Top Brands Section */}
+        <section className="container mx-auto px-4 py-16">
+          <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">🏆 Top Brands</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {["SunShade", "IslandStyle", "AquaCool", "SkinGuard"].map((brand) => (
+              <div key={brand} className="flex items-center justify-center p-8 bg-gray-100 rounded-lg grayscale hover:grayscale-0 transition-all cursor-pointer border border-gray-200">
+                <span className="text-xl font-black text-gray-400 uppercase tracking-widest">{brand}</span>
+              </div>
+            ))}
+          </div>
+        </section>
       </div>
     );
-  } 
-  
-  
+}
