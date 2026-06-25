@@ -1,13 +1,12 @@
 "use client";
 
 import { useState, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 // BetterAuth ক্লায়েন্ট ইমপোর্ট করা হলো (আপনার প্রজেক্টের পাথ অনুযায়ী প্রয়োজনে পরিবর্তন করুন)
 import { authClient } from "@/lib/auth-client";
 
 function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
 
   const [email, setEmail] = useState("");
@@ -44,11 +43,12 @@ function LoginForm() {
         return;
       }
 
-      // সফল লগইন মেসেজ দেখানো ও রিডাইরেকশন
+      // সফল লগইন মেসেজ দেখানো ও রিডাইরেকশন।
+      // হার্ড নেভিগেশন ব্যবহার করা হয় যাতে নেভবারসহ পুরো অ্যাপে সেশন সাথে সাথে আপডেট হয়
+      // (router.push ক্লায়েন্ট সেশন স্টোর রিফ্রেশ করে না, তাই লগইন/রেজিস্টার অপশন থেকে যেত)।
       setToastMessage("Welcome back to SunCart! 🏖️");
       setTimeout(() => {
-        router.push(callbackUrl);
-        router.refresh();
+        window.location.href = callbackUrl;
       }, 1000);
     } catch (err) {
       console.error("Login error:", err);
@@ -78,7 +78,6 @@ function LoginForm() {
       <div className="max-w-md w-full bg-white/85 backdrop-blur-md rounded-3xl shadow-2xl border border-orange-100 overflow-hidden transition-all duration-300 hover:shadow-orange-200/50">
         {/* ব্র্যান্ড ব্যানার এবং টাইটেল */}
         <div className="bg-gradient-to-r from-orange-300 to-amber-500 p-8 text-center text-white relative">
-        
           <h1 className="text-3xl font-black tracking-tight mb-2">SunCart</h1>
           <p className="text-orange-50 text-sm font-medium">Your Gateway to Summer Essentials </p>
         </div>
@@ -86,7 +85,7 @@ function LoginForm() {
         {/* ফর্ম কনটেন্ট এরিয়া */}
         <div className="p-8">
           <h2 className="text-2xl font-bold text-slate-800 text-center mb-6">
-            Welcome Back! Login 
+            Welcome Back! Login
           </h2>
 
           {/* সাকসেস টোস্ট/মেসেজ */}
