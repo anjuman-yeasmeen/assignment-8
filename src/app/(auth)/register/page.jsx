@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { authClient } from "@/lib/auth-client"; // আপনার প্রজেক্টের সঠিক BetterAuth ক্লায়েন্ট পাথ দিবেন
+import { authClient } from "@/lib/auth-client"; 
 
 const RegisterPage = () => {
     const router = useRouter();
@@ -26,17 +26,17 @@ const RegisterPage = () => {
             email,
             password,
             name,
-            image: photoUrl, // BetterAuth-এ ছবির জন্য 'image' ফিল্ড ব্যবহার করা হয়
+            image: photoUrl, // BetterAuth-এ ছবির জন্য 'image' ফিল্ড ব্যবহার করা হয়
         }, {
             onRequest: () => setLoading(true),
             onSuccess: () => {
                 setLoading(false);
-                // রিকোয়ারমেন্ট অনুযায়ী সাকসেস হলে লগইন পেজে নিয়ে যাবে
+                // রেজিস্ট্রেশন সাকসেস হলে লগইন পেজে নিয়ে যাবে
                 router.push('/login'); 
             },
             onError: (ctx) => {
                 setLoading(false);
-                // রিকোয়ারমেন্ট অনুযায়ী এরর মেসেজ ফর্মে শো করা হবে
+                // এরর মেসেজ ফর্মে শো করা হবে
                 setErrorMessage(ctx.error.message || "Registration failed. Please try again.");
             }
         });
@@ -46,7 +46,7 @@ const RegisterPage = () => {
     const handleGoogleLogin = async () => {
         await authClient.signIn.social({
             provider: "google",
-            callbackURL: "/", // লগইন সাকসেস হলে হোম পেজে নিয়ে যাবে
+            callbackURL: "/", // লগইন সাকসেস হলে হোম পেজে নিয়ে যাবে
         });
     };
 
