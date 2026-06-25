@@ -1,175 +1,139 @@
-"use client";
-
-import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { authClient } from "@/lib/auth-client";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
+// লোকাল JSON ফাইল থেকে প্রোডাক্ট ডাটা — root-এর product.json (লিস্ট পেজের মতোই)
+import productData from "../../../../../product.json";
 
-const ProfilePage = () => {
-  // ১. সেশন থেকে লগইন করা ইউজারের ডাটা নেওয়া
-  const { data: session, isPending } = authClient.useSession();
-  const user = session?.user;
+const ProductDetailsPage = async ({ params }) => {
+  const { id } = await params;
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState("");
-  const [name, setName] = useState("");
-  const [image, setImage] = useState("");
-
-  // ইউজার ডাটা এলে ফর্মের ইনিশিয়াল ভ্যালু সেট করা
-  useEffect(() => {
-    if (user) {
-      setName(user.name || "");
-      setImage(user.image || "");
-    }
-  }, [user]);
-
-  // ২. Update Information — better-auth updateUser দিয়ে নাম ও ছবি আপডেট
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    setMessage("");
-    setSaving(true);
-
-    await authClient.updateUser(
-      { name, image },
-      {
-        onSuccess: () => {
-          setSaving(false);
-          setIsEditing(false);
-          setMessage("Profile updated successfully! 🎉");
-        },
-        onError: (ctx) => {
-          setSaving(false);
-          setMessage(ctx.error.message || "Update failed. Please try again.");
-        },
-      },
-    );
-  };
-
-  // লোডিং অবস্থা
-  if (isPending) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <span className="loading loading-spinner loading-lg text-orange-500"></span>
-      </div>
-    );
+  // Protected Route: শুধু লগইন করা ইউজার দেখতে পারবে।
+  // লগইন না থাকলে callbackUrl সহ লগইন পেজে পাঠানো হয়, যাতে লগইনের পর এখানেই ফিরে আসে।
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) {
+    redirect(`/login?callbackUrl=/products/${id}`);
   }
 
-  // লগইন না থাকলে
-  if (!user) {
+  const product = (productData.models || []).find((item) => String(item.id) === String(id));
+
+  // প্রোডাক্ট না পাওয়া গেলে থিম-ম্যাচিং মেসেজ
+  if (!product) {
     return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4 text-center px-4">
-        <h2 className="text-2xl font-bold text-gray-800">Please log in to view your profile.</h2>
+      <div className="min-h-[70vh] flex flex-col items-center justify-center text-center px-4">
+        <span className="text-6xl mb-4">🏝️</span>
+        <h2 className="text-2xl font-bold text-gray-800">Product Not Found!</h2>
+        <p className="text-gray-500 text-sm mt-2 mb-6">
+          The summer essential you are looking for doesn&apos;t exist.
+        </p>
         <Link
-          href="/login?callbackUrl=/profile"
-          className="btn bg-orange-500 hover:bg-orange-600 text-white border-none"
+          href="/products"
+          className="btn bg-orange-500 hover:bg-orange-600 text-white border-none rounded-2xl"
         >
-          Go to Login
+          Back to Products
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100 py-12 px-4">
-      <div className="max-w-2xl mx-auto bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl border border-orange-100 overflow-hidden">
-        {/* হেডার ব্যানার */}
-        <div className="bg-gradient-to-r from-orange-300 to-amber-500 h-32 relative">
-          <div className="absolute -bottom-12 left-1/2 -translate-x-1/2">
-            <img
-              src={image || user.image || "https://i.pravatar.cc/150"}
-              alt={user.name}
-              className="w-24 h-24 rounded-full border-4 border-white object-cover shadow-lg"
-            />
-          </div>
+    <div className="bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-100 min-h-screen py-10 md:py-16">
+      <div className="container mx-auto px-4">
+        {/* Breadcrumb */}
+        <div className="text-sm breadcrumbs mb-6 text-gray-500">
+          <ul>
+            <li>
+              <Link href="/" className="hover:text-orange-500">
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link href="/products" className="hover:text-orange-500">
+                Products
+              </Link>
+            </li>
+            <li className="text-orange-600 font-medium">{product.name}</li>
+          </ul>
         </div>
 
-        <div className="pt-16 pb-8 px-6 md:px-10 text-center">
-          <h1 className="text-2xl font-bold text-slate-800">{user.name}</h1>
-          <p className="text-slate-500 text-sm mt-1">{user.email}</p>
+        {/* Main Product Card */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 bg-white/85 backdrop-blur-md p-6 md:p-10 rounded-3xl shadow-2xl border border-orange-100">
+          {/* Left: Image */}
+          <div className="flex justify-center items-center bg-orange-50/60 rounded-2xl p-4 overflow-hidden group min-h-[360px] md:min-h-[460px]">
+            <img
+              src={product.image}
+              alt={product.name}
+              className="max-h-[420px] w-full object-contain rounded-xl group-hover:scale-105 transition-transform duration-300"
+            />
+          </div>
 
-          {/* সাকসেস/এরর মেসেজ */}
-          {message && (
-            <div className="alert bg-orange-50 text-orange-700 border border-orange-200 rounded-2xl mt-6 text-sm justify-center">
-              <span>{message}</span>
+          {/* Right: Details */}
+          <div className="flex flex-col justify-between">
+            <div>
+              {/* Category + Rating */}
+              <div className="flex justify-between items-center mb-4">
+                <span className="badge bg-orange-100 text-orange-700 font-semibold border-none px-3 py-3 text-xs uppercase tracking-wider">
+                  {product.category}
+                </span>
+                <div className="badge badge-secondary gap-1 p-3 font-bold">⭐ {product.rating}</div>
+              </div>
+
+              {/* Name + Brand */}
+              <h1 className="text-3xl md:text-4xl font-extrabold text-slate-800 mb-2 leading-tight">
+                {product.name}
+              </h1>
+              <p className="text-sm text-gray-400 font-medium mb-5">
+                Brand: <span className="text-gray-600 font-semibold">{product.brand}</span>
+              </p>
+
+              {/* Price */}
+              <div className="bg-gradient-to-r from-orange-50 to-amber-50 p-4 rounded-2xl inline-block mb-6 border border-orange-100">
+                <span className="text-xs text-gray-500 block font-medium uppercase tracking-wider">
+                  Special Summer Price
+                </span>
+                <span className="text-4xl font-black text-orange-600">${product.price}</span>
+              </div>
+
+              {/* Description */}
+              <div className="space-y-2 mb-6">
+                <h3 className="text-lg font-bold text-slate-800">Product Description</h3>
+                <p className="text-gray-600 leading-relaxed text-sm md:text-base">
+                  {product.description}
+                </p>
+              </div>
             </div>
-          )}
 
-          {/* ডিটেইলস অথবা এডিট ফর্ম */}
-          {!isEditing ? (
-            <div className="mt-8 space-y-4 text-left">
-              <div className="flex justify-between items-center border-b border-orange-50 pb-3">
-                <span className="text-sm font-semibold text-slate-500">Name</span>
-                <span className="font-medium text-slate-800">{user.name}</span>
-              </div>
-              <div className="flex justify-between items-center border-b border-orange-50 pb-3">
-                <span className="text-sm font-semibold text-slate-500">Email</span>
-                <span className="font-medium text-slate-800">{user.email}</span>
+            {/* Stock + Actions */}
+            <div className="pt-6 border-t border-orange-100 space-y-4">
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <span>Availability:</span>
+                <span
+                  className={`font-bold ${product.stock > 0 ? "text-green-600" : "text-red-500"}`}
+                >
+                  {product.stock > 0 ? `${product.stock} items left in stock` : "Out of Stock"}
+                </span>
               </div>
 
-              <button
-                onClick={() => {
-                  setMessage("");
-                  setIsEditing(true);
-                }}
-                className="btn w-full bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold rounded-2xl border-none shadow-lg shadow-orange-500/20 mt-4"
-              >
-                Update Information ✏️
-              </button>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button
+                  className="btn flex-1 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white border-none font-bold text-lg h-12 rounded-2xl shadow-lg shadow-orange-500/20 transition-all disabled:from-slate-200 disabled:to-slate-300 disabled:text-slate-400"
+                  disabled={product.stock === 0}
+                >
+                  Add to Cart 🛒
+                </button>
+                <Link
+                  href="/products"
+                  className="btn btn-outline border-amber-200 text-slate-600 hover:bg-amber-50 px-6 h-12 font-bold rounded-2xl"
+                >
+                  Back to Shop
+                </Link>
+              </div>
             </div>
-          ) : (
-            <form onSubmit={handleUpdate} className="mt-8 space-y-5 text-left">
-              <div>
-                <label className="label">
-                  <span className="label-text font-bold text-slate-600">Full Name</span>
-                </label>
-                <input
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Your name"
-                  className="input input-bordered w-full rounded-2xl border-amber-200 focus:border-orange-500 focus:outline-none"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="label">
-                  <span className="label-text font-bold text-slate-600">Photo URL</span>
-                </label>
-                <input
-                  type="url"
-                  value={image}
-                  onChange={(e) => setImage(e.target.value)}
-                  placeholder="https://example.com/avatar.jpg"
-                  className="input input-bordered w-full rounded-2xl border-amber-200 focus:border-orange-500 focus:outline-none"
-                />
-              </div>
-
-              <div className="flex gap-3 pt-2">
-                <button
-                  type="submit"
-                  disabled={saving}
-                  className="btn flex-1 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold rounded-2xl border-none shadow-lg shadow-orange-500/20"
-                >
-                  {saving ? <span className="loading loading-spinner"></span> : "Save Changes"}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsEditing(false);
-                    setMessage("");
-                  }}
-                  className="btn btn-outline border-amber-200 text-slate-600 hover:bg-amber-50 rounded-2xl"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          )}
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default ProfilePage;
+export default ProductDetailsPage;
